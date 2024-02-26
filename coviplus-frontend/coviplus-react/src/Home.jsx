@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import './App.css'
 import homeimg from './assets/home-img.png'
 import aboutimg from './assets/about-img.jpg'
-import Chatbot from './chatbot';
-import Chatbutton from './Chatbutton';
+import Chatbot from './components/Chatbot';
+import Chatbutton from './components/Chatbutton';
 import React, { useState } from 'react';
 
 
@@ -58,9 +58,9 @@ const Home = () => {
     </section>
     <div>
     
-        <Chatbutton onClick={handleClick} />
+      <Chatbutton onClick={handleClick} />
        {clicked && (
-        <Chatbot  />
+        <Chatbot />
        )
        }
     

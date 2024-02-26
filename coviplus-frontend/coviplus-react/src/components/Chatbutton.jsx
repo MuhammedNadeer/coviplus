@@ -1,5 +1,5 @@
 import React from "react";
-import ico from './assets/chat-4-32.ico'
+import ico from '../assets/chat-4-32.ico'
 // Import icon from react-icons library
 
 const Chatbutton = ({ onClick }) => {

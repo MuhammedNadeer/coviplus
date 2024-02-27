@@ -2,7 +2,7 @@ import os
 import google.generativeai as genai
 from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify, session
-from flask_bcrypt import Bcrypt #pip install Flask-Bcrypt = https://pypi.org/project/Flask-Bcrypt/
+from flask_bcrypt import Bcrypt 
 from models import db, User
 
 

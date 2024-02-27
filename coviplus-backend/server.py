@@ -1,3 +1,4 @@
+import os
 import google.generativeai as genai
 from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify, session
@@ -5,7 +6,7 @@ from flask_bcrypt import Bcrypt #pip install Flask-Bcrypt = https://pypi.org/pro
 from models import db, User
 
 
-genai.configure(api_key='AIzaSyB8pS_bC4LNB-t-27f-eRrsQb-mBWlBfQQ')
+genai.configure(api_key=os.environ.get('API_KEY'))
 
 gemini_model = genai.GenerativeModel('gemini-pro')
 

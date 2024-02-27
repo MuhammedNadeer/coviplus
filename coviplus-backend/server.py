@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt #pip install Flask-Bcrypt = https://pypi.org/pro
 from models import db, User
 
 
-genai.configure(api_key='AIzaSyB8pS_bC4LNB-t-27f-eRrsQb-mBWlBfQQ')
+genai.configure(api_key='API_KEY_HERE')
 
 gemini_model = genai.GenerativeModel('gemini-pro')
 

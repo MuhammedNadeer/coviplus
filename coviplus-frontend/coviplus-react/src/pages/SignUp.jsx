@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useToast } from '@chakra-ui/react'
 
 
 function SignUp() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const toast = useToast()
 
   const navigate = useNavigate();
      
@@ -19,6 +21,13 @@ function SignUp() {
         .then(function (response) {
              console.log(response);
             navigate("/try");
+            toast({
+              title: 'Account created.',
+              description: "We've created your account for you.",
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+            })
         })
         .catch(function (error) {
             console.log(error, 'error');
@@ -91,7 +100,7 @@ function SignUp() {
           <div className="text-center">
             <p className="mt-2 text-sm text-gray-600">
               Already have an account?{' '}
-              <Link to="/try"><a href="#" className="font-medium text-teal-600 hover:text-teal-500">
+              <Link to="/login"><a href="#" className="font-medium text-teal-600 hover:text-teal-500">
                 Log in
               </a></Link>
             </p>

@@ -19,10 +19,10 @@ const Home = () => {
             <div className="container mx-auto flex justify-between items-center">
                 <h1 className="text-3xl text-teal-900 font-semibold">CoviPlus</h1>
                 <ul className="flex items-center">
-                    <li><a href="#home" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">Home</a></li>
+                    <li><a href="#" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">Home</a></li>
                     <li><a href="#about" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">About</a></li>
                     <li><a href="#contact" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">Support</a></li>
-                    <li><Link to="/try"><button className="rounded-md bg-[#00686F] text-white box-border px-4 h-10 w-32">Try Now</button></Link></li>
+                    <li><Link to="/login"><button className="rounded-md bg-[#00686F] text-white box-border px-4 h-10 w-32">Try Now</button></Link></li>
                 </ul>
             </div>
         </nav><section id="home" className="section home">
@@ -30,7 +30,7 @@ const Home = () => {
                     <div className="w-1/2 h-full p-12 mt-96 flex flex-col justify-start">
                         <div className="mb-4"><h1 className="text-5xl font-semibold">Navigate the Post-COVID Era with <span className="text-5xl text-[#00686F]">COVIPLUS</span>: Your Medical Crystal Ball!</h1>
                         <p className="mt-2 text-lg font-mono tracking-wide">"Empowering post-COVID lung health recovery seamlessly, our web app blends cutting-edge tech with community support."</p></div>
-                        <Link to="/try"><button className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-teal-500 duration-300 rounded-md shadow-2xl shadow-cyan-500/50 mt-8 bg-[#00686F] text-white tracking-wide box-border h-12 w-32">Try Now</button></Link>
+                        <Link to="/login"><button className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-teal-500 duration-300 rounded-md shadow-2xl shadow-cyan-500/50 mt-8 bg-[#00686F] text-white tracking-wide box-border h-12 w-32">Try Now</button></Link>
                     </div>
                     <div className="w-1/2 h-full flex items-center"><img src={homeimg} className=""/></div>
                 </div>

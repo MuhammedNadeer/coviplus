@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function DashBoard() {
   // State to hold patient data
@@ -32,6 +33,7 @@ function DashBoard() {
   return (
     <div>
       Hello World
+      <Link to="/predict"><button className="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-teal-500 duration-300 rounded-md shadow-2xl shadow-cyan-500/50 mt-8 bg-[#00686F] text-white tracking-wide box-border h-12 w-32">Prediction</button></Link>
     </div>
   );
 }

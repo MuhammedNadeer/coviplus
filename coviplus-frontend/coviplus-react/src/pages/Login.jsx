@@ -12,6 +12,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
+  const toast = useToast()
   
      
     const handleLogin = () => {
@@ -32,11 +33,26 @@ function Login() {
                 const userData = response.data;
                 login(userData);
                 navigate("/dash");
+                toast({
+                  title: 'Login Successfull.',
+                  description: "",
+                  status: 'success',
+                  duration: 9000,
+                  isClosable: true,
+                })
             })
             .catch(function (error) {
                 console.log(error, 'error');
                 if (error.response.status === 401) {
-                    alert("Invalid credentials");
+                    toast({
+                      title: 'Login Failed.',
+                      description: "",
+                      status: 'error',
+                      duration: 9000,
+                      isClosable: true,
+                    })
+                    setEmail('')
+                    setPassword('')
                 }
             });
         }

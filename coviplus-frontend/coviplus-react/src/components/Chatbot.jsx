@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import 'regenerator-runtime/runtime.js'
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const {transcript, resetTranscript, browserSupportsSpeechRecognition} = useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return null
+  }
 
   const sendMessage = async () => {
     // Update messages array with new user message immediately
-    setMessages(messages.concat({ userMessage: inputValue, botMessage: '' }));
+    setMessages(messages.concat({ userMessage: inputValue || transcript, botMessage: '' }));
 
     // Clear input value after sending message
     setInputValue('');
+    resetTranscript();
 
     // Send user's message to Flask API
     const response = await fetch('http://localhost:5000/message', {
@@ -33,8 +45,12 @@ function Chatbot() {
     }
   };
 
+  const startListening = () => {
+    SpeechRecognition.startListening();
+  };
+
   return (
-    <div className="fixed bottom-10 right-10 m-4 w-64 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
+    <div className="fixed bottom-12 right-12 m-4 w-84 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
       <div className="flex flex-col h-72 p-4 border-b border-gray-300 overflow-y-auto">
         {messages.map((message, index) => (
           <div key={index} className="flex flex-col">
@@ -45,17 +61,25 @@ function Chatbot() {
       </div>
       <div className=" border-t border-gray-300">
         <div className="flex">
-          <input
-            type="text"
-            name="message"
-            placeholder="Type your message..."
-            className="flex-1 px-3 py-2 w-12 rounded-l-md border border-gray-300 focus:outline-none focus:ring-teal-600 focus:border-teal-500"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
+        <div className="relative flex-1">
+            <input
+              type="text"
+              name="message"
+              placeholder="Type your message..."
+              className="px-3 py-2 w-full rounded-l-md border border-gray-300 focus:outline-none focus:ring-teal-600 focus:border-teal-500"
+              value={inputValue || transcript}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+            />
+            <button
+              className="absolute inset-y-0 right-0 flex items-center px-4 bg-transparent text-gray-400 rounded-r-md hover:text-gray-600 focus:outline-none"
+              onClick={startListening}
+            >
+              <FontAwesomeIcon icon={faMicrophone} />
+            </button>
+          </div>
           <button
-            className="px-4 py-2 bg-teal-500 text-white rounded-r-md hover:bg-teal-600 focus:outline-none focus:ring focus:border-blue-500"
+            className="px-4 py-2 bg-teal-500 text-white hover:bg-teal-600 focus:outline-none focus:ring focus:border-blue-500"
             onClick={sendMessage}
           >
             Send

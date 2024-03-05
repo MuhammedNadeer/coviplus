@@ -32,7 +32,13 @@ function SignUp() {
         .catch(function (error) {
             console.log(error, 'error');
             if (error.response.status === 401) {
-                alert("Invalid credentials");
+                toast({
+                  title: 'Failed creating account.',
+                  description: "",
+                  status: 'error',
+                  duration: 9000,
+                  isClosable: true,
+                })
             }
         });
     };

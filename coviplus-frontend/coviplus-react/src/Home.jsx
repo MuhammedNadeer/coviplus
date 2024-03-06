@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import './App.css'
+import logoimg from "./assets/coviplus.ico"
 import homeimg from './assets/home-img.png'
 import aboutimg from './assets/about-img.jpg'
 import Chatbot from './components/Chatbot';
@@ -17,7 +18,8 @@ const Home = () => {
     return (
         <><nav className="py-4 text-stone-950 ">
             <div className="container mx-auto flex justify-between items-center">
-                <h1 className="text-3xl text-teal-900 font-semibold">CoviPlus</h1>
+                <div className="flex"><img className="mr-2 h-10 w-10" src={logoimg}/>
+                <h1 className="text-3xl text-teal-900 font-semibold">CoviPlus</h1></div>
                 <ul className="flex items-center">
                     <li><a href="#" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">Home</a></li>
                     <li><a href="#about" className="text-stone-950 hover:text-teal-600 px-4 font-sans tracking-wide">About</a></li>

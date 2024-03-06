@@ -75,8 +75,18 @@ def login_user():
 def chatbot():
     message = request.json["message"]
     print(message)
+    if message == "hi" or message == "hello":
+        # print('hereeeeeeee')
+        response = gemini_model.generate_content(f"{message}")
+    else:
+        topic = gemini_model.generate_content(f"{message} -- is this a health related or non-health related topic?  answer in strictly one word ")
+        print(topic.text)
+        if topic.text == "Health":
+            response = gemini_model.generate_content(f"prompt = \'{message}\' . small description about prompt wihtout title")
+        else:
+            response = gemini_model.generate_content("Say something like this is beyond my capabilities and i cant reply to non health related data")
+
     
-    response = gemini_model.generate_content(f"Give a small simple description for  prompt = \'{message}\'  without a title only a small description reply only if this prompt is health related, but if this prompt is not health related respond that it is beyond your capabilities.If the prompt is a normal greeting, respond appropriately.")
     bot_message = response.text
     
     return jsonify({"bot_message": bot_message}),200

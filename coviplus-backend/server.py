@@ -73,10 +73,10 @@ def login_user():
 
 @app.route("/message", methods=["POST"])
 def chatbot():
-    message = request.get_data()
+    message = request.json["message"]
     print(message)
     
-    response = gemini_model.generate_content(f"Give a small simple description for {message} without a title only a small description reply, only if this prompt is health related only othervise respond that it is beyond your capabilities")
+    response = gemini_model.generate_content(f"Give a small simple description for  prompt = \'{message}\'  without a title only a small description reply only if this prompt is health related, but if this prompt is not health related respond that it is beyond your capabilities.If the prompt is a normal greeting, respond appropriately.")
     bot_message = response.text
     
     return jsonify({"bot_message": bot_message}),200

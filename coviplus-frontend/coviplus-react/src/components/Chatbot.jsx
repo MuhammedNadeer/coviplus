@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import 'regenerator-runtime/runtime.js'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import axios from 'axios';
+import PerfectScrollbar from 'perfect-scrollbar';
 
 
 
@@ -10,6 +12,9 @@ function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const {transcript, resetTranscript, browserSupportsSpeechRecognition} = useSpeechRecognition();
+  // const container = document.querySelector('#container');
+  // const ps = new PerfectScrollbar(container);
+  // ps.update();
 
   if (!browserSupportsSpeechRecognition) {
     return null
@@ -24,11 +29,10 @@ function Chatbot() {
     resetTranscript();
 
     // Send user's message to Flask API
-    const response = await fetch('http://localhost:5000/message', {
-      method: 'POST',
-      body: inputValue
-    });
-    const data = await response.json();
+    const response = await axios.post('http://localhost:5000/message', {
+      message: inputValue
+    })
+    const data = response.data;
     console.log('Response from Flask:', data.bot_message);
 
     // Update messages array with bot response
@@ -50,23 +54,24 @@ function Chatbot() {
   };
 
   return (
-    <div className="fixed bottom-12 right-12 m-4 w-84 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
-      <div className="flex flex-col h-72 p-4 border-b border-gray-300 overflow-y-auto">
+    <div className="fixed bottom-12 right-12 m-4 w-64 bg-white border border-gray-300 rounded-lg shadow-md overflow-hidden">
+      <div className="flex flex-col h-72 p-4 border-b border-gray-300 overflow-y-auto" id="container">
         {messages.map((message, index) => (
           <div key={index} className="flex flex-col">
-            <div className="bg-blue-200 text-right rounded-tl-lg rounded-br-lg rounded-bl-lg my-2 p-2 text-base">{message.userMessage}</div>
-            {message.botMessage && <div className="bg-teal-300 text-left rounded-tr-lg rounded-br-lg rounded-bl-lg p-2 text-base">{message.botMessage}</div>}
+            <div className="flex justify-end"><div className="bg-blue-200 rounded-tl-lg rounded-br-lg rounded-bl-lg my-2 p-2 text-base fit-content">{message.userMessage}</div></div>
+            {message.botMessage && <div className="bg-teal-300 text-base max-w-fit-content rounded-tr-lg rounded-br-lg rounded-bl-lg p-2">{message.botMessage}</div>}
           </div>
         ))}
       </div>
-      <div className=" border-t border-gray-300">
+      <div className="">
         <div className="flex">
         <div className="relative flex-1">
             <input
               type="text"
               name="message"
+              autoComplete="off"
               placeholder="Type your message..."
-              className="px-3 py-2 w-full rounded-l-md border border-gray-300 focus:outline-none focus:ring-teal-600 focus:border-teal-500"
+              className="px-3 py-2 w-full rounded-bl-lg focus:outline-none focus:ring-teal-600 focus:border-teal-500"
               value={inputValue || transcript}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}

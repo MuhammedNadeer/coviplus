@@ -4,6 +4,14 @@ from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify, session
 from flask_bcrypt import Bcrypt 
 from models import db, User
+import tensorflow as tf
+import cv2
+from PIL import Image, ImageOps
+import numpy as np
+import tensorflow.keras as keras
+from tensorflow.keras.preprocessing import image
+from skimage.segmentation import mark_boundaries
+from lime import lime_image
 
 
 genai.configure(api_key=os.environ.get('API_KEY'))
@@ -25,6 +33,74 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
  
+model = tf.keras.models.load_model('CrossValidatedModel.h5')
+
+def import_and_predict(image_data, model):
+    size = (200, 200)    
+    image = ImageOps.fit(image_data, size, Image.LANCZOS)
+    image = np.asarray(image)
+    img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img_resize = (cv2.resize(img, dsize=(200, 200), interpolation=cv2.INTER_CUBIC))/255.
+
+    img_reshape = img_resize[np.newaxis,...]
+
+    prediction = model.predict(img_reshape)
+    y_classes = prediction.argmax(axis=-1)
+
+    return prediction, y_classes
+
+def transform_img_fn(img, path_list):
+    out = []
+    for img_path in path_list:
+        img_ = image.load_img(img_path, target_size=(200, 200))
+        x = image.img_to_array(img_)
+        x = np.expand_dims(x, axis=0)
+        x = x / 255
+        x = x.reshape(1,200, 200,3)
+    return x
+
+def displayExplainations(model, img):
+    explainer = lime_image.LimeImageExplainer()
+    exp = explainer.explain_instance(img[0].astype('double'), model.predict, hide_color=0, num_samples=100)
+    
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=False, hide_rest=False)
+    # Saving explanation image
+    plt.imsave('static/' + 'Exp1.png', mark_boundaries(temp / 2 + 0.5, mask), dpi=2000)
+    
+    # Explanation 2 
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, hide_rest=True)
+    plt.imsave('static/' + 'Exp2.png', mark_boundaries(temp / 2 + 0.5, mask), dpi=2000)
+    
+    # Explanation 3
+    temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, hide_rest=False)
+    plt.imsave('static/' + 'Exp3.png', mark_boundaries(temp / 2 + 0.5, mask), dpi=2000)
+
+
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if request.method == 'POST':
+        file = request.files['file']
+        file_path = 'static/uploaded_image.png'
+        file.save(file_path)
+        uploadedImage = Image.open(file_path)
+        prediction, category = import_and_predict(uploadedImage, model)
+        
+        if np.argmax(prediction) == 0:
+            result = "COVID-19"
+        elif np.argmax(prediction) == 1:
+            result = "Normal"
+        else:
+            result = "Viral Pneumonia"
+
+        predict_data = gemini_model.generate_content(f"my ml model have received prediction for a xray input as {result}, so list susceptible diseases and precatoinary measures")
+
+        return jsonify({
+            'result': result,
+            'probability': prediction.tolist(),
+            "predict_data": predict_data.text
+        })
+
  
 @app.route("/signup", methods=["POST"])
 def signup():

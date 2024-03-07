@@ -30,7 +30,7 @@ const Predict = () => {
         return;
       }
       try {
-        const response = await fetch("https://5d2d-2401-4900-2652-2fc9-e9b4-dbb5-67d2-fbbc.ngrok-free.app/predict",{
+        const response = await fetch("http://127.0.0.1:5000/predict",{
           method : "POST",
           body : formData
         });

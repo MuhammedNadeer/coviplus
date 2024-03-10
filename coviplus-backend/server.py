@@ -93,12 +93,17 @@ def predict():
         else:
             result = "Viral Pneumonia"
 
-        predict_data = gemini_model.generate_content(f"my ml model have received prediction for a xray input as {result}, so list susceptible diseases and precatoinary measures")
+        susdiseases = gemini_model.generate_content(f"list susceptible diseases names seperated by coma for {result} no nee of titles")
+        precaution = gemini_model.generate_content(f"seperated by coma and no need of titles, precatoinary measures to prevent {result} ")
+
+        sus_diseases = susdiseases.text.split(',')
+        precautions = precaution.text.split(',')
 
         return jsonify({
             'result': result,
             'probability': prediction.tolist(),
-            "predict_data": predict_data.text
+            "susdisease": sus_diseases,
+            "precaution": precautions
         })
 
  

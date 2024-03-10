@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './App.css'
-import logoimg from "./assets/coviplus.ico"
+import logoimg from "./assets/coviplus_logo.ico.jpg"
 import homeimg from './assets/home-img.png'
 import aboutimg from './assets/about-img.jpg'
 import React, { useState } from 'react';
@@ -44,7 +44,7 @@ const Home = () => {
               </div>
             </div>
           </section>
-          <section className="bg-gray-100 min-h-screen flex items-center justify-center" id="contact">
+          <section className="bg-teal-50 min-h-screen w-full flex items-center justify-center" id="contact">
             <div className="max-w-md p-8 bg-white rounded shadow-md">
               <h2 className="text-3xl font-semibold mb-4">Support Section</h2>
               <p className="text-gray-600 mb-6">
@@ -88,10 +88,9 @@ const Home = () => {
               </div>
             </div>
           </section>
-          <footer className="bg-gray-800 py-4 text-gray-300">
+          <footer className="bg-teal-800 py-4 text-gray-300 flex items-center">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-              <p>&copy; {new Date().getFullYear()} Your Company. All rights reserved.</p>
-              <p>Designed with ❤️ by You</p>
+              <p>&copy; {new Date().getFullYear()} CoviPlus. All rights reserved.</p>
             </div>
           </footer>
    </>

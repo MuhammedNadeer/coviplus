@@ -24,6 +24,7 @@ const App = () => {
                     <Route path="forget" element={<ForgetPass />} />
                     <Route path="dash" element={<DashBoard/>}/>
                     <Route path="predict" element={<Predict/>}/>
+                    <Route path="chatbot" element={<Chatbot/>}/>
                 </Routes>
                 </Fragment>
             </Router>

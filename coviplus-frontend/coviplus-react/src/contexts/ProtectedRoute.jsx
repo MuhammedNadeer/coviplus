@@ -8,7 +8,13 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      element={user ? <Component /> : <Navigate to="/login" />}
+      render={(props) =>
+        user ? (
+          <Component key={props.location.key} {...props} />
+        ) : (
+          <Navigate to="/login" />
+        )
+      }
     />
   );
 };

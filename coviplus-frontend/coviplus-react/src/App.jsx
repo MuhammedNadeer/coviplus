@@ -10,13 +10,14 @@ import DashBoard from "./pages/DashBoard"
 import ProtectedRoute from "./contexts/ProtectedRoute"
 import { AuthProvider } from "./contexts/AuthContext"
 import Chatbot from "./pages/Chatbot"
+import { Switch } from "@chakra-ui/react"
 
 
 const App = () => {
     return (
+        <>
         <AuthProvider>
             <Router>
-                <Fragment>
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="login" element={<Login />} />
@@ -26,9 +27,9 @@ const App = () => {
                     <Route path="predict" element={<Predict/>}/>
                     <Route path="chatbot" element={<Chatbot/>}/>
                 </Routes>
-                </Fragment>
             </Router>
         </AuthProvider>
+        </>
     )
 }
 

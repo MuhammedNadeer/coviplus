@@ -4,7 +4,7 @@ import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
 import 'regenerator-runtime/runtime.js'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import axios from 'axios';
-import BottomNav from './BottomNav';
+import BottomNav from '../components/BottomNav';
 
 
 

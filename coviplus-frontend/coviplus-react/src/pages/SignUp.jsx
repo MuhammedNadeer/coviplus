@@ -20,7 +20,7 @@ function SignUp() {
         })
         .then(function (response) {
              console.log(response);
-            navigate("/try");
+            navigate("/dash");
             toast({
               title: 'Account created.',
               description: "We've created your account for you.",

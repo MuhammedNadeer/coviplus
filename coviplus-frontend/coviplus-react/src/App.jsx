@@ -9,7 +9,7 @@ import ForgetPass from "./pages/ForgetPass"
 import DashBoard from "./pages/DashBoard"
 import ProtectedRoute from "./contexts/ProtectedRoute"
 import { AuthProvider } from "./contexts/AuthContext"
-import Chatbot from "./components/Chatbot"
+import Chatbot from "./pages/Chatbot"
 
 
 const App = () => {

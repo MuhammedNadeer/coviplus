@@ -51,7 +51,8 @@ function Chatbot() {
   };
 
   return (
-    <><div className="fixed inset-0 bg-gray-100 flex justify-center items-center">
+    <>
+    <div className="fixed inset-0 bg-gray-100 flex justify-center items-center">
       <div className="w-full max-w-lg bg-white border border-gray-300 rounded-lg shadow-md">
         <div className="flex flex-col h-96 p-4 border-b border-gray-300 overflow-y-auto" id="container">
           {messages.map((message, index) => (

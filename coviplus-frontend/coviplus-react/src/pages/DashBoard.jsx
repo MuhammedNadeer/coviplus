@@ -26,9 +26,9 @@ function Dashboard() {
 
 
   return (
-    <body className="bg-gray-50">
-      <div className="container mx-auto p-4 h-svh mb-10 bg-gray-50 w-screen">
-      <div className="flex gap-4 h-full">
+    <div className="bg-gray-50">
+      <div className="container flex justify-center mx-auto p-4 h-svh mb-10 bg-gray-50 w-5/6">
+      <div className="flex h-full fit-content">
         <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
           <h1 className="text-3xl font-bold my-2">CoviPlus</h1>
           <Wrap>
@@ -42,9 +42,10 @@ function Dashboard() {
             Logout
           </button>
         </div>
-        <div className="flex-grow w-screen">
-          <div className="flex flex-wrap gap-4 h-1/2">
-            <div className="w-1/3 bg-white rounded shadow p-4">
+        <div className="flex">
+        <div className="flex-grow w-full">
+          <div className="flex flex-wrap justify-center gap-4 h-1/2">
+            <div className="w-2/5 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Fever History</h3>
               </div>
@@ -60,14 +61,14 @@ function Dashboard() {
                 <h3 className="text-xl font-bold">Body Temperature</h3>
               </div>
             </div>
-            <div className="w-1/3 bg-white rounded shadow p-4">
+            <div className="w-2/5 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Heart Rate</h3>
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap gap-4 mt-4">
-            <div className="w-2/3 ml-2 bg-white rounded shadow p-4">
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            <div className="w-3/4 bg-white rounded shadow p-4">
               <h3 className="text-xl font-bold">Statistics</h3>
               <CChart
               type="line" 
@@ -76,11 +77,11 @@ function Dashboard() {
                 datasets: [
                   {
                     label: "Fever",
-                    backgroundColor: "rgba(220, 220, 220, 0.2)",
-                    borderColor: "rgba(220, 220, 220, 1)",
-                    pointBackgroundColor: "rgba(220, 220, 220, 1)",
+                    backgroundColor: "rgba(255, 255, 0, 0.2)", 
+                    borderColor: "rgba(255, 255, 0, 1)", 
+                    pointBackgroundColor: "rgba(255, 255, 0, 0.5)",
                     pointBorderColor: "#fff",
-                    data: [40, 20, 12, 39, 10, 40, 39, 80, 40]
+                    data: [98.6, 99.1, 100.2, 99.5, 100.8, 99.3, 99.7, 100.1, 98.9]
                   },
                   {
                     label: "Blood Pressure",
@@ -88,8 +89,16 @@ function Dashboard() {
                     borderColor: "rgba(151, 187, 205, 1)",
                     pointBackgroundColor: "rgba(151, 187, 205, 1)",
                     pointBorderColor: "#fff",
-                    data: [50, 12, 28, 29, 7, 25, 12, 70, 60]
+                    data: [120, 118, 122, 119, 123, 121, 119, 118, 120]
                   },
+                  {
+                    label: "Heart Rate",
+                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                    borderColor: "rgba(255, 99, 132, 1)",
+                    pointBackgroundColor: "rgba(255, 99, 132, 1)",
+                    pointBorderColor: "#fff",
+                    data: [70, 72, 75, 78, 80, 82, 84] // Sample heart rate data
+                  }                  
                 ],
               }}
               options = {{
@@ -123,9 +132,13 @@ function Dashboard() {
             </div>
           </div>
         </div>
+        <div className="flex flex-shrink-0 w-64 bg-white">
+          hi
+        </div>
+        </div>
       </div>
     </div><BottomNav />
-    </body>
+    </div>
   )}
 
 export default Dashboard;

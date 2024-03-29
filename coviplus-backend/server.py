@@ -172,5 +172,14 @@ def chatbot():
     
     return jsonify({"bot_message": bot_message}),200
 
+@app.route("/quote", methods=["POST"])
+def quote():
+    req = request.json["message"]
+    print(req)
+    todaysquote = gemini_model.generate_content("Give me 1 health related quote")
+    print(todaysquote.text)
+    tquote = todaysquote.text
+    return jsonify({"quote": tquote})
+
 if __name__ == "__main__":
     app.run(debug=True)

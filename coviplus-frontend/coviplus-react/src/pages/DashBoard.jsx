@@ -1,5 +1,7 @@
 import React from 'react';
 import BottomNav from '../components/BottomNav';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { Avatar, AvatarBadge, AvatarGroup, Toast, Wrap, WrapItem } from '@chakra-ui/react'
@@ -8,10 +10,20 @@ import { CChart } from '@coreui/react-chartjs'
 
 
 function Dashboard() {
+  const [activeMenu, setActiveMenu] = useState("overview");
+  const [healthRecordsFile, setHealthRecordsFile] = useState(null);
+  const [todaysQuote, settodaysQuote] = useState("")
 
   const username = "Alicia";
   const navigate = useNavigate();
   const toast = useToast();
+
+  useEffect(() => {
+    // Fetch today's health quote from an API or use a static list
+    fetchTodaysQuote();
+
+  }, []);
+  
 
   const onLogout = () => {
       navigate("/")
@@ -24,25 +36,59 @@ function Dashboard() {
       })
   }
 
+  const fetchTodaysQuote = async () => {
+    try {
+      // Fetch today's health quote from an API
+      const response = await axios.post('http://localhost:5000/quote',{"message": "hi"});
+      const quotes = response.data
+      console.log("fetching")
+      settodaysQuote(quotes.quote);
+    } catch (error) {
+      console.error('Error fetching today\'s quote:', error);
+    }
+  };
+
+  const handleMenuClick = (menu) => {
+    setActiveMenu(menu);
+  };
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setHealthRecordsFile(file);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // You can perform any necessary operations with the healthRecordsFile here
+    console.log("Health Records File Uploaded:", healthRecordsFile);
+  };
+  
 
   return (
     <div className="bg-gray-50">
       <div className="container flex justify-center mx-auto p-4 h-svh mb-10 bg-gray-50 w-5/6">
       <div className="flex h-full fit-content">
-        <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
-          <h1 className="text-3xl font-bold my-2">CoviPlus</h1>
-          <Wrap>
-            <WrapItem>
-              <Avatar className="my-3" size="lg" src={avatar}></Avatar>
-            </WrapItem>
-          </Wrap>
-          <p>Hello {username}!</p>
-          <p>It's good to see you again.</p>
-          <button className="absolute bottom-3 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded shadow" onClick={onLogout}>
-            Logout
-          </button>
+      <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
+        <h1 className="text-3xl font-bold my-2">CoviPlus</h1>
+        <Wrap>
+          <WrapItem>
+            <Avatar className="my-3" size="lg" src={avatar}></Avatar>
+          </WrapItem>
+        </Wrap>
+        <p>Hello {username}!</p>
+        <p>It's good to see you again.</p>
+        <hr className="mt-8"/>
+        <div className="menu mt-4">
+          <button className="block w-full text-left py-3 px-4 text-gray-800 hover:bg-teal-100 hover:text-teal-600 transition duration-300" onClick={() => handleMenuClick("overview")}>Overview</button>
+          <button className="block w-full text-left py-3 px-4 text-gray-800 hover:bg-teal-100 hover:text-teal-600 transition duration-300" onClick={() => handleMenuClick("healthrecords")}>Health Records</button>
         </div>
-        <div className="flex">
+
+        <button className="absolute bottom-3 bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded shadow" onClick={onLogout}>
+          Logout
+        </button>
+      </div>
+        {activeMenu === "overview" &&(<div className="flex">
         <div className="flex-grow w-full">
           <div className="flex flex-wrap justify-center gap-4 h-1/2">
             <div className="w-2/5 bg-white rounded shadow p-4">
@@ -133,9 +179,41 @@ function Dashboard() {
           </div>
         </div>
         <div className="flex flex-shrink-0 w-64 bg-white">
-          hi
+        <div className="mb-4">
+              <h2 className="text-xl font-bold">Today's Health Quote</h2>
+              <p>{todaysQuote}</p>
+            </div>
         </div>
+        </div>)}
+        {activeMenu === "healthrecords"&&(
+          <div className="flex-grow w-full">
+          <div className="flex flex-wrap justify-center gap-4 h-1/2">
+          <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
+            {/* Health Records File Upload Form */}
+            <form onSubmit={handleSubmit}>
+              <h1 className="text-3xl font-bold my-2">CoviPlus</h1>
+              <label className="block mb-2">
+                Upload Health Records:
+                <input type="file" onChange={handleFileChange} className="w-full border-gray-300 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" />
+              </label>
+              <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded shadow">Submit</button>
+            </form>
+          </div>
+          {/* Display Health Records */}
+          <div className="flex flex-shrink-0 w-64 bg-white">
+            <h2 className="text-2xl font-bold mb-4">Health Records</h2>
+            {healthRecordsFile && (
+              <div>
+                <p><strong>File Name:</strong> {healthRecordsFile.name}</p>
+                <p><strong>File Type:</strong> {healthRecordsFile.type}</p>
+                <p><strong>File Size:</strong> {Math.round(healthRecordsFile.size / 1024)} KB</p>
+                {/* You can add further processing or display logic for the file here */}
+              </div>
+            )}
+          </div>
+          </div>
         </div>
+        )}
       </div>
     </div><BottomNav />
     </div>

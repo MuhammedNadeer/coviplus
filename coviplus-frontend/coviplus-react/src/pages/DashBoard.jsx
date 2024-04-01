@@ -12,7 +12,8 @@ import { CChart } from '@coreui/react-chartjs'
 function Dashboard() {
   const [activeMenu, setActiveMenu] = useState("overview");
   const [healthRecordsFile, setHealthRecordsFile] = useState(null);
-  const [todaysQuote, settodaysQuote] = useState("")
+  const [todaysQuote, settodaysQuote] = useState("");
+  const [review, setReview] = useState("")
 
   const username = "Alicia";
   const navigate = useNavigate();
@@ -21,7 +22,6 @@ function Dashboard() {
   useEffect(() => {
     // Fetch today's health quote from an API or use a static list
     fetchTodaysQuote();
-
   }, []);
   
 
@@ -48,6 +48,8 @@ function Dashboard() {
     }
   };
 
+  
+
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
   };
@@ -60,6 +62,17 @@ function Dashboard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formdata = new FormData();
+    formdata.append('file', healthRecordsFile);
+
+        axios.post('http://127.0.0.1:5000/review', formdata)
+            .then(response => {
+                console.log(response.data.review);
+                setReview(response.data.review);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     // You can perform any necessary operations with the healthRecordsFile here
     console.log("Health Records File Uploaded:", healthRecordsFile);
   };
@@ -187,27 +200,33 @@ function Dashboard() {
         </div>)}
         {activeMenu === "healthrecords"&&(
           <div className="flex-grow w-full">
-          <div className="flex flex-wrap justify-center gap-4 h-1/2">
-          <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
+          <div className="flex flex-wrap ml-4 gap-4 h-full">
+          <div className="flex-shrink-0 w-full bg-white shadow text-black p-4 rounded relative">
             {/* Health Records File Upload Form */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="flex flex-col justify-around">
               <h1 className="text-3xl font-bold my-2">CoviPlus</h1>
               <label className="block mb-2">
                 Upload Health Records:
-                <input type="file" onChange={handleFileChange} className="w-full border-gray-300 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50" />
+                <input type="file" onChange={handleFileChange} className="w-full border-teal-300 rounded-md shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-500 focus:ring-opacity-50 my-2" />
               </label>
-              <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded shadow">Submit</button>
+              <button type="submit" className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded shadow w-1/4">Submit</button>
             </form>
           </div>
           {/* Display Health Records */}
-          <div className="flex flex-shrink-0 w-64 bg-white">
-            <h2 className="text-2xl font-bold mb-4">Health Records</h2>
+          <div className="flex flex-col flex-shrink-0 w-full h-1/2 bg-white">
+            <h2 className="text-2xl p-2 font-bold mb-4">Health Records</h2>
             {healthRecordsFile && (
               <div>
-                <p><strong>File Name:</strong> {healthRecordsFile.name}</p>
-                <p><strong>File Type:</strong> {healthRecordsFile.type}</p>
-                <p><strong>File Size:</strong> {Math.round(healthRecordsFile.size / 1024)} KB</p>
-                {/* You can add further processing or display logic for the file here */}
+                <div className="flex flex-col"> 
+                  <p><strong>File Name:</strong> {healthRecordsFile.name}</p>
+                  <p><strong>File Type:</strong> {healthRecordsFile.type}</p>
+                  <p><strong>File Size:</strong> {Math.round(healthRecordsFile.size / 1024)} KB</p>
+                  {/* You can add further processing or display logic for the file here */}
+                </div>
+                <div className="flex flex-col">
+                  Quick Review of the health record : 
+                  <p>{review}</p>
+                </div>
               </div>
             )}
           </div>

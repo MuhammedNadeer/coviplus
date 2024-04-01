@@ -16,7 +16,7 @@ from lime import lime_image
 
 genai.configure(api_key=os.environ.get('API_KEY'))
 
-gemini_model = genai.GenerativeModel('gemini-pro')
+gemini_model = genai.GenerativeModel('gemini-pro-vision')
 
 
 app = Flask(__name__)
@@ -180,6 +180,19 @@ def quote():
     print(todaysquote.text)
     tquote = todaysquote.text
     return jsonify({"quote": tquote})
+
+@app.route("/review",methods=['POST'])
+def review():
+    file = request.files['file']
+    file_path = 'static/health_image.png'
+    file.save(file_path)
+    img = Image.open(file_path)
+    response = gemini_model.generate_content(["tell me the details in it in a single para",img])
+    # response.resolve()
+    print(response.text)
+    reviews = response.text
+    return jsonify({"review":reviews})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

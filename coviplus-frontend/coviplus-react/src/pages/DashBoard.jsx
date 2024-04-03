@@ -108,22 +108,26 @@ function Dashboard() {
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Fever History</h3>
               </div>
-              <div className="text-gray-500">Today</div>
+              <div className="text-gray-500">Today : 90</div>
+              <h1 className="text-8xl font-bold">40%</h1>
             </div>
             <div className="w-1/3 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Blood Pressure</h3>
               </div>
+              <h1 className="text-8xl font-bold">90 - 120</h1>
             </div>
             <div className="w-1/3 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Body Temperature</h3>
               </div>
+              <h1 className="text-8xl font-bold">92F</h1>
             </div>
             <div className="w-2/5 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Heart Rate</h3>
               </div>
+              <h1 className="text-8xl font-bold">82</h1>
             </div>
           </div>
           <div className="flex flex-wrap justify-center gap-4 mt-4">
@@ -192,7 +196,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="flex flex-shrink-0 w-64 bg-white">
-        <div className="mb-4">
+        <div className="mb-4 p-2">
               <h2 className="text-xl font-bold">Today's Health Quote</h2>
               <p>{todaysQuote}</p>
             </div>

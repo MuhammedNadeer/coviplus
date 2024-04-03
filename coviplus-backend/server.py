@@ -16,8 +16,8 @@ from lime import lime_image
 
 genai.configure(api_key=os.environ.get('API_KEY'))
 
-gemini_model = genai.GenerativeModel('gemini-pro-vision')
-
+gemini_model = genai.GenerativeModel('gemini-pro')
+g_model = genai.GenerativeModel('gemini-pro-vision')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nadeer'
@@ -187,7 +187,7 @@ def review():
     file_path = 'static/health_image.png'
     file.save(file_path)
     img = Image.open(file_path)
-    response = gemini_model.generate_content(["tell me the details in it in a single para",img])
+    response = g_model.generate_content(["tell me the details in it in a single para also include the details value",img])
     # response.resolve()
     print(response.text)
     reviews = response.text

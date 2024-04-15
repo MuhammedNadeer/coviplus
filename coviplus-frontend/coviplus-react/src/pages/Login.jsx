@@ -5,6 +5,7 @@ import { Link , useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react'
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Cookies from "js-cookie"
 
 
 function Login() {
@@ -31,6 +32,7 @@ function Login() {
                 console.log(response);
                 //console.log(response.data);
                 const userData = response.data;
+                Cookies.set("username",userData.username)
                 login(userData);
                 navigate("/dash");
                 toast({

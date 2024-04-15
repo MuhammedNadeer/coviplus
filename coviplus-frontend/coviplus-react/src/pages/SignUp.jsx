@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react'
+import Cookies from 'js-cookie'
 
 
 function SignUp() {
@@ -19,8 +20,10 @@ function SignUp() {
             password: password
         })
         .then(function (response) {
-             console.log(response);
-            navigate("/dash");
+            console.log(response);
+            const userData = response.data
+            Cookies.set("username",userData.username)
+            navigate("/login");
             toast({
               title: 'Account created.',
               description: "We've created your account for you.",

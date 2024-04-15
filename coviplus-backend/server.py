@@ -3,7 +3,7 @@ import google.generativeai as genai
 from flask_cors import CORS, cross_origin
 from flask import Flask, request, jsonify, session
 from flask_bcrypt import Bcrypt 
-from models import db, User
+from models import db, User, HealthRecord
 import tensorflow as tf
 import cv2
 from PIL import Image, ImageOps
@@ -12,6 +12,9 @@ import tensorflow.keras as keras
 from tensorflow.keras.preprocessing import image
 from skimage.segmentation import mark_boundaries
 from lime import lime_image
+import base64
+import random
+
 
 
 genai.configure(api_key=os.environ.get('API_KEY'))
@@ -129,7 +132,8 @@ def signup():
  
     return jsonify({
         "id": new_user.id,
-        "email": new_user.email
+        "email": new_user.email,
+        "username":new_user.username
     })
  
 @app.route("/login", methods=["POST"])
@@ -149,7 +153,8 @@ def login_user():
   
     return jsonify({
         "id": user.id,
-        "email": user.email
+        "email": user.email,
+        "username": user.username
     })
 
 @app.route("/message", methods=["POST"])
@@ -179,19 +184,25 @@ def quote():
     todaysquote = gemini_model.generate_content("Give me 1 health related quote")
     print(todaysquote.text)
     tquote = todaysquote.text
-    return jsonify({"quote": tquote})
+    return jsonify({"quote": tquote, "feverh": random.randint(10,20), "fever": random.randint(97,105), "sp":random.randint(110,140), "dp":random.randint(70,90),"hr":random.randint(60,100)})
 
 @app.route("/review",methods=['POST'])
 def review():
+    username = request.form['username']  # Assuming username is provided in the request
+    user = User.query.filter_by(username=username).first()
     file = request.files['file']
-    file_path = 'static/health_image.png'
+    file_path = os.path.join('static', 'health_records', file.filename)
     file.save(file_path)
+    new_health_record = HealthRecord(user_id=user.id, file_path=file_path)
+    db.session.add(new_health_record)
+    db.session.commit()
+
     img = Image.open(file_path)
     response = g_model.generate_content(["tell me the details in it in a single para also include the details value",img])
     # response.resolve()
     print(response.text)
     reviews = response.text
-    return jsonify({"review":reviews})
+    return jsonify({"review":reviews,"message": "Health record saved successfully."})
 
 
 if __name__ == "__main__":

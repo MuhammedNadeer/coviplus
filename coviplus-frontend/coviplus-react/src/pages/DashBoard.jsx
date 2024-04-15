@@ -7,15 +7,24 @@ import { useToast } from '@chakra-ui/react';
 import { Avatar, AvatarBadge, AvatarGroup, Toast, Wrap, WrapItem } from '@chakra-ui/react'
 import avatar from '../assets/user.png'
 import { CChart } from '@coreui/react-chartjs'
+import Cookies from "js-cookie"
+import { Skeleton, SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 
 
 function Dashboard() {
   const [activeMenu, setActiveMenu] = useState("overview");
   const [healthRecordsFile, setHealthRecordsFile] = useState(null);
   const [todaysQuote, settodaysQuote] = useState("");
-  const [review, setReview] = useState("")
+  const [fever, setFever] = useState("");
+  const [sp, setSp] = useState("");
+  const [dp, setDp] = useState("");
+  const [feverh, setFeverHistory] = useState("");
+  const [hr, setHeartRate] = useState("");
+  const [review, setReview] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const username = "Alicia";
+
+  const username = Cookies.get("username");
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -39,12 +48,21 @@ function Dashboard() {
   const fetchTodaysQuote = async () => {
     try {
       // Fetch today's health quote from an API
+      setLoading(true);
       const response = await axios.post('http://localhost:5000/quote',{"message": "hi"});
       const quotes = response.data
       console.log("fetching")
+      console.log(quotes)
       settodaysQuote(quotes.quote);
+      setFever(quotes.fever)
+      setDp(quotes.dp)
+      setFeverHistory(quotes.feverh)
+      setSp(quotes.sp)
+      setHeartRate(quotes.hr)
     } catch (error) {
       console.error('Error fetching today\'s quote:', error);
+    } finally {
+      setLoading(false); // Set loading to false when request completes
     }
   };
 
@@ -64,6 +82,7 @@ function Dashboard() {
     e.preventDefault();
     const formdata = new FormData();
     formdata.append('file', healthRecordsFile);
+    formdata.append('username', username);
 
         axios.post('http://127.0.0.1:5000/review', formdata)
             .then(response => {
@@ -79,7 +98,7 @@ function Dashboard() {
   
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50"><Skeleton isLoaded={!loading}>
       <div className="container flex justify-center mx-auto p-4 h-svh mb-10 bg-gray-50 w-5/6">
       <div className="flex h-full fit-content">
       <div className="flex-shrink-0 w-64 bg-white shadow text-black p-4 rounded relative">
@@ -108,26 +127,26 @@ function Dashboard() {
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Fever History</h3>
               </div>
-              <div className="text-gray-500">Today : 90</div>
-              <h1 className="text-8xl font-bold">40%</h1>
+              <div className="text-gray-500">Today : {fever}</div>
+              <h1 className="text-8xl font-bold">{feverh}%</h1>
             </div>
             <div className="w-1/3 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Blood Pressure</h3>
               </div>
-              <h1 className="text-8xl font-bold">90 - 120</h1>
+              <h1 className="text-8xl font-bold">{dp} - {sp}</h1>
             </div>
             <div className="w-1/3 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Body Temperature</h3>
               </div>
-              <h1 className="text-8xl font-bold">92F</h1>
+              <h1 className="text-8xl font-bold">{fever}</h1>
             </div>
             <div className="w-2/5 bg-white rounded shadow p-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-xl font-bold">Heart Rate</h3>
               </div>
-              <h1 className="text-8xl font-bold">82</h1>
+              <h1 className="text-8xl font-bold">{hr}</h1>
             </div>
           </div>
           <div className="flex flex-wrap justify-center gap-4 mt-4">
@@ -221,13 +240,7 @@ function Dashboard() {
             <h2 className="text-2xl p-2 font-bold mb-4">Health Records</h2>
             {healthRecordsFile && (
               <div>
-                <div className="flex flex-col"> 
-                  <p><strong>File Name:</strong> {healthRecordsFile.name}</p>
-                  <p><strong>File Type:</strong> {healthRecordsFile.type}</p>
-                  <p><strong>File Size:</strong> {Math.round(healthRecordsFile.size / 1024)} KB</p>
-                  {/* You can add further processing or display logic for the file here */}
-                </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col p-2">
                   Quick Review of the health record : 
                   <p>{review}</p>
                 </div>
@@ -238,7 +251,7 @@ function Dashboard() {
         </div>
         )}
       </div>
-    </div><BottomNav />
+    </div><BottomNav /></Skeleton>
     </div>
   )}
 

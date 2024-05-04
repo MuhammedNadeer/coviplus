@@ -77,12 +77,20 @@ def displayExplainations(model, img):
     # Explanation 3
     temp, mask = exp.get_image_and_mask(exp.top_labels[0], positive_only=True, hide_rest=False)
     plt.imsave('static/' + 'Exp3.png', mark_boundaries(temp / 2 + 0.5, mask), dpi=2000)
+ 
 
-
+@app.route('/patient-info', methods=['POST'])
+def receive_patient_info():
+    global patient_info
+    patient_info = request.json
+    print("Received patient information:")
+    print(patient_info)
+    return jsonify({'message': 'Patient information received successfully'})
 
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
+        global patient_info  # Ensure patient_info is accessible
         file = request.files['file']
         file_path = 'static/uploaded_image.png'
         file.save(file_path)
@@ -96,8 +104,10 @@ def predict():
         else:
             result = "Viral Pneumonia"
 
-        susdiseases = gemini_model.generate_content(f"list susceptible diseases names seperated by coma for {result} no nee of titles")
-        precaution = gemini_model.generate_content(f"seperated by coma and no need of titles, precatoinary measures to prevent {result} ")
+        print(patient_info)  # Corrected variable name
+
+        susdiseases = gemini_model.generate_content(f"list susceptible diseases names seperated by coma for {result} no need of titles and patient has {patient_info}")
+        precaution = gemini_model.generate_content(f"seperated by coma and no need of titles, precatoinary measures to prevent {result} and patient has {patient_info}")
 
         sus_diseases = susdiseases.text.split(',')
         precautions = precaution.text.split(',')
@@ -108,6 +118,7 @@ def predict():
             "susdisease": sus_diseases,
             "precaution": precautions
         })
+
 
  
 @app.route("/signup", methods=["POST"])
